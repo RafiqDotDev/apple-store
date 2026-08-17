@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Product, ColorOption, StorageOption } from '../data/products';
+import type { Product, ColorOption, StorageOption } from '../data/products';
 import { X, Trash2, Plus, Minus, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export interface CartItem {

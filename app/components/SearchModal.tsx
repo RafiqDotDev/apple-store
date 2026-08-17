@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { PRODUCTS, Product } from '../data/products';
+import { PRODUCTS } from '../data/products';
+import type { Product } from '../data/products';
 import { Search, X, ArrowRight, Sparkles } from 'lucide-react';
 
 interface SearchModalProps {
