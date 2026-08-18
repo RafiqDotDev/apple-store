@@ -1,105 +1,144 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", ui-sans-serif, system-ui, sans-serif;
-  --color-apple-black: #0B0B0C;
-  --color-apple-charcoal: #1D1D1F;
-  --color-apple-gray: #6E6E73;
-  --color-apple-lightgray: #F5F5F7;
-  --color-apple-offwhite: #F7F7F5;
-  --color-apple-titanium: #8E8E93;
-  --color-apple-accent: #2997FF;
-}
-
 @layer base {
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  :root {
+    --font-pixel: 'Press Start 2P', monospace;
+    --font-silkscreen: 'Silkscreen', cursive;
+    --font-outfit: 'Outfit', sans-serif;
   }
-  
+
   body {
-    background-color: #0B0B0C;
-    color: #FFFFFF;
-    font-family: var(--font-sans);
+    background-color: #59BFFF;
+    color: #0f172a;
+    font-family: 'Inter', sans-serif;
     overflow-x: hidden;
   }
 }
 
-/* Glassmorphism & Luxury Touches */
-.glass-header {
-  background: rgba(11, 11, 12, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+/* Custom Pixel Fonts */
+.font-pixel {
+  font-family: var(--font-pixel), monospace;
 }
 
-.glass-card {
-  background: rgba(29, 29, 31, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.font-silkscreen {
+  font-family: var(--font-silkscreen), cursive;
 }
 
-.glass-card-light {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+.font-outfit {
+  font-family: var(--font-outfit), sans-serif;
 }
 
-.titanium-gradient {
-  background: linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 50%, #1C1C1E 100%);
+/* Retro Shadow Effects */
+.pixel-box-shadow {
+  box-shadow: 4px 4px 0px #0f172a;
 }
 
-.titanium-text {
-  background: linear-gradient(180deg, #FFFFFF 0%, #A1A1A6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.pixel-box-shadow-sm {
+  box-shadow: 2px 2px 0px #0f172a;
 }
 
-.gold-titanium-text {
-  background: linear-gradient(180deg, #F3E5D8 0%, #CBB5A1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.pixel-box-shadow-lg {
+  box-shadow: 6px 6px 0px #0f172a;
 }
 
-/* Hide scrollbars for slick swiping */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.pixel-btn-shadow {
+  box-shadow: 3px 3px 0px #0f172a;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Custom subtle animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+.pixel-btn-shadow:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #0f172a;
+}
+
+.pixel-btn-shadow:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #0f172a;
+}
+
+/* Pixel Card Borders & Style */
+.pixel-card {
+  background-color: #ffffff;
+  border: 3px solid #0f172a;
+  border-radius: 14px;
+  box-shadow: 4px 4px 0px #0f172a;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+}
+
+.pixel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 7px 7px 0px #0f172a;
+}
+
+/* Infinite Horizontal Running Cloud Animations */
+@keyframes cloudDriftRight {
+  0% {
+    transform: translateX(-300px);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.05);
+  100% {
+    transform: translateX(110vw);
   }
 }
 
-.animate-pulse-glow {
-  animation: pulseGlow 6s ease-in-out infinite;
+@keyframes cloudDriftRightReverse {
+  0% {
+    transform: translateX(110vw);
+  }
+  100% {
+    transform: translateX(-300px);
+  }
+}
+
+.animate-cloud-layer-1 {
+  animation: cloudDriftRight 28s linear infinite;
+}
+
+.animate-cloud-layer-2 {
+  animation: cloudDriftRight 42s linear infinite;
+}
+
+.animate-cloud-layer-3 {
+  animation: cloudDriftRight 18s linear infinite;
+}
+
+.animate-cloud-layer-reverse {
+  animation: cloudDriftRightReverse 35s linear infinite;
+}
+
+/* Continuous Marquee Ticker */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: 200%;
+  animation: marquee 20s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #38bdf8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0f172a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1e293b;
 }

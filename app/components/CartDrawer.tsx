@@ -1,200 +1,137 @@
-import React, { useState } from 'react';
-import type { Product, ColorOption, StorageOption } from '../data/products';
-import { X, Trash2, Plus, Minus, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import React from "react";
+import { X, Trash2, Plus, Minus, ShoppingBag, MessageSquare, ArrowRight } from "lucide-react";
+import { useCartStore } from "../store/cartStore";
+import { SmartImage } from "./SmartImage";
 
-export interface CartItem {
-  id: string; // unique item id
-  product: Product;
-  selectedColor: ColorOption;
-  selectedStorage?: StorageOption;
-  price: number;
-  quantity: number;
-}
+export const CartDrawer: React.FC = () => {
+  const {
+    isCartOpen,
+    toggleCart,
+    cartItems,
+    cartTotal,
+    updateQuantity,
+    removeFromCart,
+    toggleCheckout,
+  } = useCartStore();
 
-interface CartDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  cartItems: CartItem[];
-  onUpdateQuantity: (id: string, delta: number) => void;
-  onRemoveItem: (id: string) => void;
-  onClearCart: () => void;
-  onTriggerToast: (msg: string) => void;
-}
+  if (!isCartOpen) return null;
 
-export const CartDrawer: React.FC<CartDrawerProps> = ({
-  isOpen,
-  onClose,
-  cartItems,
-  onUpdateQuantity,
-  onRemoveItem,
-  onClearCart,
-  onTriggerToast,
-}) => {
-  if (!isOpen) return null;
+  const handleWhatsAppCheckout = () => {
+    if (cartItems.length === 0) return;
+    const itemsListStr = cartItems
+      .map(
+        (item) =>
+          `• ${item.product.name} (${item.selectedColor}, ${item.selectedStorage}, ${item.selectedPTA}) x${item.quantity} = Rs. ${(
+            item.product.price * item.quantity
+          ).toLocaleString()}`
+      )
+      .join("\n");
 
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
+    const text = encodeURIComponent(
+      `Hi NEXORA! I would like to place an order for the following cart items:\n\n${itemsListStr}\n\n*Total Amount:* Rs. ${cartTotal.toLocaleString()}\n\nPlease confirm availability and payment details for Pakistan delivery.`
+    );
 
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shipping = subtotal > 0 ? 0 : 0; // Free white-glove express delivery
-  const total = subtotal + shipping;
-
-  const handleCheckoutSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setOrderComplete(true);
-    setTimeout(() => {
-      onClearCart();
-      setOrderComplete(false);
-      setIsCheckingOut(false);
-      onClose();
-      onTriggerToast('Order placed successfully! Official invoice sent to your email.');
-    }, 2500);
+    window.open(`https://wa.me/923001234567?text=${text}`, "_blank");
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex justify-end animate-fade-in-up">
-      
-      <div className="w-full max-w-md bg-[#0B0B0C] border-l border-white/10 h-full flex flex-col justify-between text-white p-6 relative">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-white/10">
-          <div className="flex items-center gap-2">
-            <h3 className="text-xl font-bold tracking-tight">Shopping Bag</h3>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 font-semibold">
-              {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
-            </span>
+    <div className="fixed inset-0 z-50 overflow-hidden animate-fade-in">
+      {/* Backdrop */}
+      <div
+        onClick={() => toggleCart(false)}
+        className="absolute inset-0 bg-slate-900/80 backdrop-blur-xs transition-opacity"
+      />
+
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+        <div className="w-screen max-w-md bg-white border-l-4 border-slate-900 pixel-box-shadow-lg flex flex-col justify-between">
+          
+          {/* Header */}
+          <div className="bg-[#1e293b] text-white p-5 border-b-4 border-slate-900 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ShoppingBag className="w-5 h-5 text-sky-400" />
+              <h2 className="font-pixel text-base text-white uppercase">
+                YOUR CART ({cartItems.length})
+              </h2>
+            </div>
+            <button
+              onClick={() => toggleCart(false)}
+              className="p-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition border border-slate-600"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Content Body */}
-        {orderComplete ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-4">
-            <CheckCircle2 className="w-16 h-16 text-emerald-400 animate-bounce" />
-            <h4 className="text-2xl font-bold text-white">Order Confirmed!</h4>
-            <p className="text-sm text-gray-400 font-light">
-              Thank you for choosing AURA Luxe Boutique. Your hardware is being prepared for priority white-glove shipping.
-            </p>
-          </div>
-        ) : isCheckingOut ? (
-          <form onSubmit={handleCheckoutSubmit} className="flex-1 overflow-y-auto py-6 space-y-4 no-scrollbar">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
-                Express Checkout
-              </h4>
-              <button
-                type="button"
-                onClick={() => setIsCheckingOut(false)}
-                className="text-xs text-blue-400 hover:underline"
-              >
-                ← Back to Bag
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs text-gray-400 block mb-1">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Muhammad Rafiq"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/10 text-white text-sm focus:outline-none focus:border-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs text-gray-400 block mb-1">Email Address</label>
-                <input
-                  type="email"
-                  required
-                  placeholder="name@domain.com"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/10 text-white text-sm focus:outline-none focus:border-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs text-gray-400 block mb-1">Delivery Address</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Street, City, Pakistan"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/10 text-white text-sm focus:outline-none focus:border-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs text-gray-400 block mb-1">Payment Method</label>
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 space-y-1">
-                  <div className="font-semibold text-white">Apple Pay / Credit Card / Cash on Delivery</div>
-                  <div>256-Bit SSL Encrypted Transaction</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-white/10">
-              <button
-                type="submit"
-                className="w-full py-4 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors shadow-lg"
-              >
-                Place Order — ${total.toLocaleString()}
-              </button>
-            </div>
-          </form>
-        ) : (
-          <div className="flex-1 overflow-y-auto py-6 space-y-4 no-scrollbar">
+          {/* Cart Items List */}
+          <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-sky-50">
             {cartItems.length === 0 ? (
-              <div className="py-20 text-center text-gray-500 font-light space-y-3">
-                <p className="text-lg">Your bag is empty.</p>
-                <p className="text-xs text-gray-600">Discover iconic products in our collection.</p>
+              <div className="text-center py-16 space-y-3">
+                <div className="w-16 h-16 bg-white border-3 border-slate-900 rounded-2xl flex items-center justify-center mx-auto text-slate-400 font-pixel text-2xl">
+                  🛒
+                </div>
+                <h3 className="font-pixel text-sm text-slate-900">YOUR CART IS EMPTY</h3>
+                <p className="font-silkscreen text-xs text-slate-600">
+                  Explore our smartphones and add your favorite device!
+                </p>
+                <button
+                  onClick={() => toggleCart(false)}
+                  className="mt-4 px-6 py-2.5 bg-sky-400 hover:bg-sky-300 text-slate-950 font-pixel text-xs border-2 border-slate-900 rounded-xl pixel-btn-shadow transition"
+                >
+                  START SHOPPING
+                </button>
               </div>
             ) : (
-              cartItems.map((item) => (
+              cartItems.map((item, index) => (
                 <div
-                  key={item.id}
-                  className="glass-card p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4"
+                  key={index}
+                  className="pixel-card bg-white p-3.5 flex items-center gap-3 relative"
                 >
-                  <img
-                    src={item.product.mainImage}
+                  {/* Item Image */}
+                  <SmartImage
+                    src={item.product.images[0]}
                     alt={item.product.name}
-                    className="w-16 h-16 object-cover rounded-xl bg-white/5"
+                    category={item.product.category}
+                    className="w-16 h-16 object-cover rounded-lg border-2 border-slate-900 shrink-0"
                   />
 
-                  <div className="flex-1">
-                    <h5 className="font-bold text-white text-sm">{item.product.name}</h5>
-                    <div className="text-xs text-gray-400 font-light">
-                      {item.selectedColor.name} {item.selectedStorage ? `• ${item.selectedStorage.size}` : ''}
+                  {/* Item Details */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-pixel text-xs text-slate-900 truncate">
+                      {item.product.name}
+                    </h4>
+
+                    <div className="font-silkscreen text-[10px] text-slate-500 space-x-1 my-1">
+                      <span>{item.selectedColor}</span> • <span>{item.selectedStorage}</span> • 
+                      <span className="text-sky-700 font-bold">{item.selectedPTA}</span>
                     </div>
-                    <div className="text-xs font-semibold text-white mt-1">
-                      ${item.price.toLocaleString()}
+
+                    <div className="font-pixel text-xs text-slate-900 font-bold">
+                      Rs. {(item.product.price * item.quantity).toLocaleString()}
                     </div>
                   </div>
 
+                  {/* Quantity Controls */}
                   <div className="flex flex-col items-end gap-2">
                     <button
-                      onClick={() => onRemoveItem(item.id)}
-                      className="text-gray-500 hover:text-red-400 transition-colors"
-                      aria-label="Remove item"
+                      onClick={() => removeFromCart(index)}
+                      className="text-rose-500 hover:text-rose-700 p-1"
+                      title="Remove"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
 
-                    <div className="flex items-center gap-2 bg-white/10 px-2 py-1 rounded-lg">
+                    <div className="flex items-center gap-1 bg-slate-100 border border-slate-900 rounded-lg p-0.5 font-pixel text-xs">
                       <button
-                        onClick={() => onUpdateQuantity(item.id, -1)}
-                        className="text-gray-300 hover:text-white"
+                        onClick={() => updateQuantity(index, item.quantity - 1)}
+                        className="w-5 h-5 flex items-center justify-center bg-white rounded text-slate-900 border border-slate-300 hover:bg-slate-200"
                       >
                         <Minus className="w-3 h-3" />
                       </button>
-                      <span className="text-xs font-bold text-white">{item.quantity}</span>
+                      <span className="w-5 text-center font-mono font-bold text-slate-900">
+                        {item.quantity}
+                      </span>
                       <button
-                        onClick={() => onUpdateQuantity(item.id, 1)}
-                        className="text-gray-300 hover:text-white"
+                        onClick={() => updateQuantity(index, item.quantity + 1)}
+                        className="w-5 h-5 flex items-center justify-center bg-white rounded text-slate-900 border border-slate-300 hover:bg-slate-200"
                       >
                         <Plus className="w-3 h-3" />
                       </button>
@@ -204,38 +141,53 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               ))
             )}
           </div>
-        )}
 
-        {/* Footer Summary */}
-        {!isCheckingOut && !orderComplete && cartItems.length > 0 && (
-          <div className="pt-4 border-t border-white/10 space-y-3">
-            <div className="space-y-1 text-xs">
-              <div className="flex justify-between text-gray-400">
-                <span>Subtotal</span>
-                <span className="text-white">${subtotal.toLocaleString()}</span>
+          {/* Footer Checkout Summary */}
+          {cartItems.length > 0 && (
+            <div className="bg-white border-t-4 border-slate-900 p-5 space-y-4 shadow-lg">
+              <div className="space-y-1.5 font-silkscreen text-xs">
+                <div className="flex justify-between text-slate-600">
+                  <span>Subtotal:</span>
+                  <span className="font-mono text-slate-900 font-bold">
+                    Rs. {cartTotal.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex justify-between text-slate-600">
+                  <span>Nationwide Express Delivery:</span>
+                  <span className="text-emerald-600 font-bold">FREE</span>
+                </div>
+                <div className="flex justify-between text-slate-900 font-pixel text-sm pt-2 border-t border-slate-200">
+                  <span>TOTAL:</span>
+                  <span className="text-slate-900 font-bold">
+                    Rs. {cartTotal.toLocaleString()}
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-between text-gray-400">
-                <span>Express White-Glove Delivery</span>
-                <span className="text-emerald-400 font-medium">Free</span>
-              </div>
-              <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-white/5">
-                <span>Total</span>
-                <span>${total.toLocaleString()}</span>
+
+              {/* Action Buttons */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    toggleCart(false);
+                    toggleCheckout(true);
+                  }}
+                  className="w-full py-3.5 bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-pixel text-xs sm:text-sm border-3 border-slate-900 rounded-xl pixel-btn-shadow transition flex items-center justify-center gap-2 font-bold uppercase tracking-wider"
+                >
+                  PROCEED TO CHECKOUT <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={handleWhatsAppCheckout}
+                  className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-pixel text-xs border-3 border-slate-900 rounded-xl pixel-btn-shadow transition flex items-center justify-center gap-2 font-bold uppercase tracking-wider"
+                >
+                  <MessageSquare className="w-4 h-4" /> ORDER VIA WHATSAPP
+                </button>
               </div>
             </div>
+          )}
 
-            <button
-              onClick={() => setIsCheckingOut(true)}
-              className="w-full py-4 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 shadow-lg"
-            >
-              <span>Continue to Checkout</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-
+        </div>
       </div>
-
     </div>
   );
 };

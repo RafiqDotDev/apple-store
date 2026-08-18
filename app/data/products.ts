@@ -1,338 +1,381 @@
-export interface ColorOption {
+export type PTAStatus = "PTA Approved" | "Non-PTA" | "VIP PTA";
+
+export type ProductColor = {
   name: string;
   hex: string;
-  image?: string;
-}
+};
 
-export interface StorageOption {
-  size: string;
-  extraPrice: number;
-}
+export type Product = {
+  id: string;
+  slug: string;
+  name: string;
+  brand: string;
+  tagline: string;
+  category: "mobile" | "accessory" | "laptop" | "watch";
+  price: number; // in PKR
+  originalPrice?: number;
+  discountPercentage?: number;
+  ptaStatus: PTAStatus;
+  warranty: string;
+  rating: number;
+  reviewCount: number;
+  isBestSeller?: boolean;
+  isNew?: boolean;
+  isDeal?: boolean;
+  badge?: string;
+  images: string[];
+  colors: ProductColor[];
+  storageOptions: string[];
+  shortSpecs: string[];
+  fullSpecs: Record<string, string>;
+  description: string;
+};
 
-export interface SpecItem {
-  label: string;
-  value: string;
-}
-
-export interface Product {
+export type CustomerSetup = {
   id: string;
   name: string;
-  headline: string;
-  tagline: string;
-  category: 'iphone' | 'mac' | 'ipad' | 'watch' | 'airpods' | 'accessories';
-  price: number;
-  formattedPrice: string;
-  monthlyPrice: string;
+  handle: string;
+  city: string;
+  productName: string;
+  comment: string;
   rating: number;
-  isNew?: boolean;
-  isFeatured?: boolean;
-  mainImage: string;
-  gallery: string[];
-  colors: ColorOption[];
-  storageOptions?: StorageOption[];
-  specs: SpecItem[];
-  description: string;
-}
+  imageUrl: string;
+  verified: boolean;
+};
 
-export const CATEGORIES = [
-  { id: 'all', label: 'All Products', icon: 'Sparkles' },
-  { id: 'iphone', label: 'iPhone', icon: 'Smartphone' },
-  { id: 'mac', label: 'Mac', icon: 'Laptop' },
-  { id: 'ipad', label: 'iPad', icon: 'Tablet' },
-  { id: 'watch', label: 'Apple Watch', icon: 'Watch' },
-  { id: 'airpods', label: 'AirPods', icon: 'Headphones' },
-  { id: 'accessories', label: 'Accessories', icon: 'Cable' },
-];
-
-export const PRODUCTS: Product[] = [
+export const MOCK_PRODUCTS: Product[] = [
   {
-    id: 'iphone-17-pro',
-    name: 'iPhone 17 Pro',
-    headline: 'Titanium. Power. Precision.',
-    tagline: 'Pro performance. Refined to the last detail.',
-    category: 'iphone',
-    price: 1199,
-    formattedPrice: '$1,199',
-    monthlyPrice: '$49.99/mo',
-    rating: 4.95,
+    id: "iphone-17-pro-max",
+    slug: "iphone-17-pro-max",
+    name: "iPhone 17 Pro Max",
+    brand: "Apple",
+    tagline: "Forged in Titanium with Next-Gen A19 Pro Chip",
+    category: "mobile",
+    price: 499999,
+    originalPrice: 539999,
+    discountPercentage: 7,
+    ptaStatus: "PTA Approved",
+    warranty: "1 Year Official Apple Warranty",
+    rating: 4.9,
+    reviewCount: 142,
+    isBestSeller: true,
     isNew: true,
-    isFeatured: true,
-    mainImage: '/images/iphone17pro.jpg',
-    gallery: [
-      '/images/iphone17pro.jpg',
-      '/images/iphone17pro.jpg',
-      '/images/iphone17pro.jpg',
+    badge: "BEST SELLER",
+    images: [
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=1000&auto=format&fit=crop"
     ],
     colors: [
-      { name: 'Natural Titanium', hex: '#8F8B82' },
-      { name: 'Black Titanium', hex: '#2C2B2E' },
-      { name: 'Silver Titanium', hex: '#E2E3E5' },
-      { name: 'Desert Titanium', hex: '#C2B2A3' }
+      { name: "Natural Titanium", hex: "#C2BCB2" },
+      { name: "Desert Titanium", hex: "#D4C4B5" },
+      { name: "Black Titanium", hex: "#35363A" },
+      { name: "White Titanium", hex: "#F3F2ED" }
     ],
-    storageOptions: [
-      { size: '256GB', extraPrice: 0 },
-      { size: '512GB', extraPrice: 200 },
-      { size: '1TB', extraPrice: 400 },
-      { size: '2TB', extraPrice: 700 }
-    ],
-    specs: [
-      { label: 'Chip', value: 'A19 Pro Bionic with 6-core GPU' },
-      { label: 'Display', value: '6.3" Super Retina XDR ProMotion 120Hz' },
-      { label: 'Camera', value: '48MP Triple Fusion with 6x Telephoto' },
-      { label: 'Battery', value: 'Up to 29 hours video playback' },
-      { label: 'Build', value: 'Grade 5 Titanium with Ceramic Shield' }
-    ],
-    description: 'Forged in Grade 5 titanium, iPhone 17 Pro introduces revolutionary thermal architecture, the powerhouse A19 Pro chip, and an all-new 48MP Pro camera system with optical precision.'
+    storageOptions: ["256GB", "512GB", "1TB"],
+    shortSpecs: ["6.9\" Super Retina XDR 120Hz", "A19 Pro Chip", "48MP Triple Pro Camera System", "Titanium Frame"],
+    fullSpecs: {
+      Display: "6.9-inch Super Retina XDR OLED, 120Hz ProMotion",
+      Processor: "Apple A19 Pro 3nm Bionic Chip",
+      Camera: "48MP Main + 48MP Ultra Wide + 48MP Telephoto (5x Optical Zoom)",
+      Battery: "4685 mAh, 30W Fast Charging, MagSafe 25W",
+      Build: "Grade 5 Titanium frame, Ceramic Shield glass front/back",
+      OS: "iOS 19 with Apple Intelligence",
+      WaterResistance: "IP68 (6m up to 30 mins)"
+    },
+    description: "The ultimate iPhone experience. Featuring a groundbreaking titanium design, the immensely powerful A19 Pro chip, and the most versatile camera system ever on an iPhone."
   },
   {
-    id: 'iphone-17',
-    name: 'iPhone 17',
-    headline: 'A powerful new everyday experience.',
-    tagline: 'Vibrant, fast, and engineered for tomorrow.',
-    category: 'iphone',
-    price: 799,
-    formattedPrice: '$799',
-    monthlyPrice: '$33.29/mo',
-    rating: 4.88,
+    id: "galaxy-s26-ultra",
+    slug: "galaxy-s26-ultra",
+    name: "Samsung Galaxy S26 Ultra",
+    brand: "Samsung",
+    tagline: "Ultra Power with Galaxy AI & Built-in S Pen",
+    category: "mobile",
+    price: 479999,
+    originalPrice: 519999,
+    discountPercentage: 8,
+    ptaStatus: "PTA Approved",
+    warranty: "1 Year Official Samsung Warranty",
+    rating: 4.8,
+    reviewCount: 98,
+    isBestSeller: true,
     isNew: true,
-    mainImage: '/images/iphone17pro.jpg',
-    gallery: [
-      '/images/iphone17pro.jpg',
+    badge: "NEW RELEASE",
+    images: [
+      "https://images.unsplash.com/photo-1580910051074-3eb694886505?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?q=80&w=1000&auto=format&fit=crop"
     ],
     colors: [
-      { name: 'Ultramarine', hex: '#3B5998' },
-      { name: 'Teal', hex: '#488B80' },
-      { name: 'Pink', hex: '#E8A3B8' },
-      { name: 'White', hex: '#F0F0F0' },
-      { name: 'Black', hex: '#1C1C1E' }
+      { name: "Titanium Gray", hex: "#7E8287" },
+      { name: "Titanium Black", hex: "#22252A" },
+      { name: "Titanium Violet", hex: "#5C586B" },
+      { name: "Titanium Yellow", hex: "#EADDA3" }
     ],
-    storageOptions: [
-      { size: '128GB', extraPrice: 0 },
-      { size: '256GB', extraPrice: 100 },
-      { size: '512GB', extraPrice: 300 }
-    ],
-    specs: [
-      { label: 'Chip', value: 'A18 Bionic with 5-core GPU' },
-      { label: 'Display', value: '6.1" Super Retina XDR OLED' },
-      { label: 'Camera', value: '48MP Dual Fusion Camera' },
-      { label: 'Battery', value: 'Up to 24 hours video playback' }
-    ],
-    description: 'Featuring dynamic color infusion, robust aluminum chassis, action button, and all-day battery life tailored for pure simplicity.'
+    storageOptions: ["256GB", "512GB", "1TB"],
+    shortSpecs: ["6.8\" Dynamic AMOLED 2X 120Hz", "Snapdragon 8 Gen 4", "200MP Quad Camera", "S Pen Included"],
+    fullSpecs: {
+      Display: "6.8-inch Dynamic AMOLED 2X, QHD+, 120Hz Adaptable",
+      Processor: "Snapdragon 8 Gen 4 for Galaxy",
+      Camera: "200MP Main + 50MP Telephoto 5x + 10MP Telephoto 3x + 50MP Ultra-Wide",
+      Battery: "5000 mAh, 45W Fast Charging",
+      Build: "Armor Aluminum & Titanium chassis, Gorilla Glass Armor",
+      OS: "One UI 7.0 (Android 15) with Galaxy AI"
+    },
+    description: "Welcome to the era of mobile AI. With Galaxy S26 Ultra in your hands, you can unleash whole new levels of creativity, productivity, and possibility."
   },
   {
-    id: 'macbook-pro-m4',
-    name: 'MacBook Pro 16"',
-    headline: 'Mac. Built to go further.',
-    tagline: 'Performance that disappears into the experience.',
-    category: 'mac',
-    price: 1999,
-    formattedPrice: '$1,999',
-    monthlyPrice: '$83.29/mo',
-    rating: 4.98,
+    id: "iphone-16-pro",
+    slug: "iphone-16-pro",
+    name: "iPhone 16 Pro",
+    brand: "Apple",
+    tagline: "Pro Camera Control with A18 Pro Chip",
+    category: "mobile",
+    price: 399999,
+    originalPrice: 429999,
+    discountPercentage: 7,
+    ptaStatus: "PTA Approved",
+    warranty: "1 Year Official Apple Warranty",
+    rating: 4.9,
+    reviewCount: 176,
+    isBestSeller: true,
+    badge: "POPULAR",
+    images: [
+      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=1000&auto=format&fit=crop"
+    ],
+    colors: [
+      { name: "Desert Titanium", hex: "#D4C4B5" },
+      { name: "Natural Titanium", hex: "#C2BCB2" },
+      { name: "Black Titanium", hex: "#35363A" }
+    ],
+    storageOptions: ["128GB", "256GB", "512GB"],
+    shortSpecs: ["6.3\" Super Retina XDR 120Hz", "A18 Pro Chip", "Camera Control Button", "48MP Fusion Camera"],
+    fullSpecs: {
+      Display: "6.3-inch Super Retina XDR OLED, 120Hz ProMotion",
+      Processor: "Apple A18 Pro Chip",
+      Camera: "48MP Fusion + 48MP Ultra Wide + 12MP 5x Telephoto",
+      Battery: "3582 mAh, 25W MagSafe Charging",
+      OS: "iOS 18 with Apple Intelligence"
+    },
+    description: "Stunning titanium design. Camera Control for instant photos and videos. 4K 120 fps Dolby Vision recording."
+  },
+  {
+    id: "pixel-9-pro-xl",
+    slug: "pixel-9-pro-xl",
+    name: "Google Pixel 9 Pro XL",
+    brand: "Google",
+    tagline: "The Most Powerful Pixel Yet with Gemini AI",
+    category: "mobile",
+    price: 349999,
+    originalPrice: 389999,
+    discountPercentage: 10,
+    ptaStatus: "PTA Approved",
+    warranty: "1 Year Store Warranty",
+    rating: 4.7,
+    reviewCount: 64,
+    isBestSeller: false,
     isNew: true,
-    isFeatured: true,
-    mainImage: '/images/macbook_m4.jpg',
-    gallery: [
-      '/images/macbook_m4.jpg',
+    badge: "BEST AI PHONE",
+    images: [
+      "https://images.unsplash.com/photo-1546054454-aa26e2b734c7?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop"
     ],
     colors: [
-      { name: 'Space Black', hex: '#1F2022' },
-      { name: 'Silver', hex: '#E3E4E6' }
+      { name: "Obsidian", hex: "#232528" },
+      { name: "Porcelain", hex: "#F3F1EC" },
+      { name: "Hazel", hex: "#6E7A70" },
+      { name: "Rose Quartz", hex: "#E8C8C8" }
     ],
-    storageOptions: [
-      { size: '512GB SSD', extraPrice: 0 },
-      { size: '1TB SSD', extraPrice: 200 },
-      { size: '2TB SSD', extraPrice: 600 },
-      { size: '4TB SSD', extraPrice: 1200 }
-    ],
-    specs: [
-      { label: 'Processor', value: 'Apple M4 Max with 16-core CPU, 40-core GPU' },
-      { label: 'Display', value: '16.2" Liquid Retina XDR (1600 nits peak)' },
-      { label: 'Unified Memory', value: '36GB Unified Memory (Configurable up to 128GB)' },
-      { label: 'Ports', value: '3x Thunderbolt 5, HDMI, SDXC, MagSafe 3' }
-    ],
-    description: 'The ultimate professional notebook. Driven by M4 Max silicon, delivering unprecedented computational capacity, battery life up to 24 hours, and unmatched color fidelity.'
+    storageOptions: ["128GB", "256GB", "512GB"],
+    shortSpecs: ["6.8\" Super Actua Display 120Hz", "Google Tensor G4", "50MP Triple Pro Camera", "16GB RAM"],
+    fullSpecs: {
+      Display: "6.8-inch Super Actua LTPO OLED, 120Hz, 3000 nits peak",
+      Processor: "Google Tensor G4 + Titan M2 Security Chip",
+      Camera: "50MP Main + 48MP Ultra-Wide + 48MP 5x Telephoto",
+      Memory: "16GB RAM + 256GB Storage",
+      OS: "Clean Android 15 with 7 years of OS updates"
+    },
+    description: "Pixel 9 Pro XL brings unmatched computational photography, Gemini Advanced AI integration, and sleek luxury build quality."
   },
   {
-    id: 'macbook-air-m3',
-    name: 'MacBook Air 15"',
-    headline: 'Lean. Mean. M3 machine.',
-    tagline: 'Impossibly thin, outrageously fast.',
-    category: 'mac',
-    price: 1299,
-    formattedPrice: '$1,299',
-    monthlyPrice: '$54.12/mo',
-    rating: 4.90,
-    mainImage: '/images/macbook_m4.jpg',
-    gallery: [
-      '/images/macbook_m4.jpg',
-    ],
-    colors: [
-      { name: 'Midnight', hex: '#1E232A' },
-      { name: 'Starlight', hex: '#F0E6D2' },
-      { name: 'Space Gray', hex: '#53565A' },
-      { name: 'Silver', hex: '#E3E4E6' }
-    ],
-    storageOptions: [
-      { size: '256GB SSD', extraPrice: 0 },
-      { size: '512GB SSD', extraPrice: 200 },
-      { size: '1TB SSD', extraPrice: 400 }
-    ],
-    specs: [
-      { label: 'Chip', value: 'Apple M3 chip with 8-core CPU' },
-      { label: 'Display', value: '15.3" Liquid Retina display' },
-      { label: 'Design', value: 'Fanless silent design, 11.5mm thin' }
-    ],
-    description: 'Designed for effortless portability without sacrificing computational power. Features a vibrant 15.3-inch display and up to 18 hours of battery.'
-  },
-  {
-    id: 'ipad-pro-m4',
-    name: 'iPad Pro 13"',
-    headline: 'iPad. Your ideas, amplified.',
-    tagline: 'Thinpossible design with Ultra Retina XDR.',
-    category: 'ipad',
-    price: 1299,
-    formattedPrice: '$1,299',
-    monthlyPrice: '$54.12/mo',
-    rating: 4.96,
+    id: "nothing-phone-3",
+    slug: "nothing-phone-3",
+    name: "Nothing Phone (3)",
+    brand: "Nothing",
+    tagline: "Transparent Iconicity with Glyph Matrix Interface",
+    category: "mobile",
+    price: 219999,
+    originalPrice: 249999,
+    discountPercentage: 12,
+    ptaStatus: "PTA Approved",
+    warranty: "1 Year Store Warranty",
+    rating: 4.8,
+    reviewCount: 52,
     isNew: true,
-    isFeatured: true,
-    mainImage: '/images/ipad_pro.jpg',
-    gallery: [
-      '/images/ipad_pro.jpg',
+    badge: "UNIQUE DESIGN",
+    images: [
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop"
     ],
     colors: [
-      { name: 'Space Black', hex: '#1C1D1F' },
-      { name: 'Silver', hex: '#E2E3E5' }
+      { name: "Transparent Dark", hex: "#1A1A1A" },
+      { name: "Transparent White", hex: "#F0F0F0" }
     ],
-    storageOptions: [
-      { size: '256GB', extraPrice: 0 },
-      { size: '512GB', extraPrice: 200 },
-      { size: '1TB', extraPrice: 600 }
-    ],
-    specs: [
-      { label: 'Chip', value: 'Apple M4 chip with Next-Gen Neural Engine' },
-      { label: 'Display', value: 'Ultra Retina XDR Tandem OLED' },
-      { label: 'Thickness', value: '5.1mm — Apple’s thinnest product ever' }
-    ],
-    description: 'The world’s most advanced display powered by tandem OLED technology. Driven by M4 silicon for extreme rendering, Apple Pencil Pro precision, and studio audio.'
+    storageOptions: ["256GB", "512GB"],
+    shortSpecs: ["6.7\" 120Hz Flexible OLED", "Glyph Matrix Lights", "Snapdragon 8s Gen 3", "50MP Dual Camera"],
+    fullSpecs: {
+      Display: "6.7-inch Flexible LTPO OLED, 120Hz, 1600 nits",
+      Glyph: "Customizable Glyph Interface LED strips",
+      Processor: "Snapdragon 8s Gen 3",
+      Camera: "50MP Sony IMX890 Main + 50MP Ultra-Wide",
+      OS: "Nothing OS 3.0 (Android 15)"
+    },
+    description: "Pure light. Pure design. Phone (3) pairs transparent engineering with a refined Glyph interface and ultra-responsive Nothing OS."
   },
   {
-    id: 'apple-watch-ultra-3',
-    name: 'Apple Watch Ultra 3',
-    headline: 'Time, redesigned.',
-    tagline: 'The ultimate sports & adventure smartwatch.',
-    category: 'watch',
-    price: 799,
-    formattedPrice: '$799',
-    monthlyPrice: '$33.29/mo',
-    rating: 4.97,
-    isNew: true,
-    isFeatured: true,
-    mainImage: '/images/apple_watch_ultra.jpg',
-    gallery: [
-      '/images/apple_watch_ultra.jpg',
+    id: "magsafe-duo-charger",
+    slug: "magsafe-duo-charger",
+    name: "Apple MagSafe Duo Charger",
+    brand: "Apple",
+    tagline: "Conveniently Charges iPhone, Apple Watch & AirPods",
+    category: "accessory",
+    price: 34999,
+    originalPrice: 39999,
+    discountPercentage: 12,
+    ptaStatus: "PTA Approved",
+    warranty: "1 Year Official Apple Warranty",
+    rating: 4.9,
+    reviewCount: 210,
+    isDeal: true,
+    badge: "BUY 2 GET 1 FREE",
+    images: [
+      "https://images.unsplash.com/photo-1622445268465-84288c52084c?q=80&w=1000&auto=format&fit=crop"
     ],
     colors: [
-      { name: 'Natural Titanium', hex: '#9E9A90' },
-      { name: 'Black Titanium', hex: '#262628' }
+      { name: "Pure White", hex: "#FFFFFF" }
     ],
-    storageOptions: [
-      { size: '49mm Titanium GPS + Cellular', extraPrice: 0 }
-    ],
-    specs: [
-      { label: 'Case', value: '49mm aerospace-grade titanium' },
-      { label: 'Display', value: '3,000 nits Always-On Retina display' },
-      { label: 'Water Resistance', value: '100m water resistance & EN13319 dive rated' },
-      { label: 'Battery', value: 'Up to 36 hours normal use (72h in Low Power)' }
-    ],
-    description: 'Engineered for extreme environments. Features dual-frequency GPS, Action button customization, depth gauge, and satellite safety alerts.'
+    storageOptions: ["Standard"],
+    shortSpecs: ["15W Fast Wireless Charging", "Folds Flat for Travel", "MagSafe Precision Alignment"],
+    fullSpecs: {
+      Compatibility: "iPhone 12 and newer, Apple Watch, AirPods Pro/Wireless Case",
+      Input: "USB-C to Lightning Cable included",
+      Output: "Up to 15W peak wireless power"
+    },
+    description: "The MagSafe Duo Charger conveniently charges your compatible iPhone, Apple Watch, Wireless Charging Case for AirPods, and other Qi-certified devices."
   },
   {
-    id: 'airpods-max-2',
-    name: 'AirPods Max',
-    headline: 'Sound without compromise.',
-    tagline: 'High-fidelity audio engineered in pure luxury.',
-    category: 'airpods',
-    price: 549,
-    formattedPrice: '$549',
-    monthlyPrice: '$22.87/mo',
-    rating: 4.92,
-    isNew: true,
-    isFeatured: true,
-    mainImage: '/images/airpods_max.jpg',
-    gallery: [
-      '/images/airpods_max.jpg',
+    id: "airpods-max-usb-c",
+    slug: "airpods-max-usb-c",
+    name: "AirPods Max (USB-C)",
+    brand: "Apple",
+    tagline: "Ultimate High-Fidelity Audio with Active Noise Cancellation",
+    category: "accessory",
+    price: 189999,
+    originalPrice: 209999,
+    discountPercentage: 9,
+    ptaStatus: "PTA Approved",
+    warranty: "1 Year Official Apple Warranty",
+    rating: 4.9,
+    reviewCount: 88,
+    isBestSeller: true,
+    badge: "PRO AUDIO",
+    images: [
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop"
     ],
     colors: [
-      { name: 'Silver', hex: '#E1E2E4' },
-      { name: 'Space Black', hex: '#232426' },
-      { name: 'Midnight', hex: '#1C232F' },
-      { name: 'Starlight', hex: '#F0E6D2' }
+      { name: "Space Black", hex: "#1D1E22" },
+      { name: "Starlight", hex: "#EBE6D9" },
+      { name: "Sky Blue", hex: "#7AA2C8" },
+      { name: "Midnight", hex: "#1C2430" }
     ],
-    specs: [
-      { label: 'Audio Tech', value: 'Apple-designed dynamic driver with Pro ANC' },
-      { label: 'Port', value: 'USB-C Charging & Lossless Audio Cable support' },
-      { label: 'Spatial Audio', value: 'Personalized Spatial Audio with dynamic head tracking' },
-      { label: 'Battery', value: 'Up to 20 hours listening time with ANC enabled' }
-    ],
-    description: 'An unparalleled balance of computational audio, active noise cancellation, and custom acoustic architecture in a breathable knit mesh headband.'
+    storageOptions: ["Standard"],
+    shortSpecs: ["USB-C Audio & Charging", "Pro Active Noise Cancellation", "Spatial Audio with Dynamic Head Tracking"],
+    fullSpecs: {
+      Audio: "Apple-designed dynamic driver, Pro ANC, Transparency mode",
+      Battery: "Up to 20 hours listening time on a single charge",
+      Connectivity: "Bluetooth 5.3, USB-C lossless audio input"
+    },
+    description: "AirPods Max deliver astonishingly detailed, high-fidelity audio for an unparalleled listening experience."
   },
   {
-    id: 'airpods-4-anc',
-    name: 'AirPods 4 ANC',
-    headline: 'Iconic design. Transformed audio.',
-    tagline: 'Open-ear active noise cancellation redefined.',
-    category: 'airpods',
-    price: 179,
-    formattedPrice: '$179',
-    monthlyPrice: '$7.45/mo',
-    rating: 4.85,
-    mainImage: '/images/airpods_max.jpg',
-    gallery: [
-      '/images/airpods_max.jpg',
+    id: "apple-watch-ultra-2",
+    slug: "apple-watch-ultra-2",
+    name: "Apple Watch Ultra 2",
+    brand: "Apple",
+    tagline: "Next-Level Rugged Endurance with Brightest 3000-Nit Display",
+    category: "watch",
+    price: 259999,
+    originalPrice: 279999,
+    discountPercentage: 7,
+    ptaStatus: "PTA Approved",
+    warranty: "1 Year Official Apple Warranty",
+    rating: 4.9,
+    reviewCount: 115,
+    isBestSeller: true,
+    badge: "RUGGED PRO",
+    images: [
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop"
     ],
     colors: [
-      { name: 'White', hex: '#FFFFFF' }
+      { name: "Black Titanium", hex: "#2B2B2B" },
+      { name: "Natural Titanium", hex: "#C0BBAF" }
     ],
-    specs: [
-      { label: 'Chip', value: 'H2 Audio Chip' },
-      { label: 'Noise Control', value: 'Active Noise Cancellation & Transparency Mode' },
-      { label: 'Case', value: 'USB-C Wireless Charging case with Find My speaker' }
-    ],
-    description: 'The world’s first open-ear design featuring Pro-grade Active Noise Cancellation, Adaptive Audio, and seamless hands-free Siri gestures.'
+    storageOptions: ["GPS + Cellular"],
+    shortSpecs: ["49mm Titanium Case", "3000-Nit Display", "Dual-Frequency Precision GPS", "Up to 72 Hours Battery"],
+    fullSpecs: {
+      Case: "49mm Aerospace grade titanium, Sapphire front crystal",
+      Display: "Always-On Retina display up to 3000 nits",
+      Water: "100m water resistance, EN13319 scuba dive certified",
+      Chip: "S9 SiP with Double Tap gesture control"
+    },
+    description: "The ultimate sports and adventure watch. Packed with groundbreaking capabilities, a stunning 3000-nit display, and rugged titanium case."
   }
 ];
 
-export const SERVICE_PERKS = [
+export const MOCK_CUSTOMER_SETUPS: CustomerSetup[] = [
   {
-    id: 'authentic',
-    icon: 'ShieldCheck',
-    title: 'Authentic Products',
-    description: '100% genuine Apple products sourced directly from official distribution channels.'
+    id: "setup-1",
+    name: "Saim Chaudhry",
+    handle: "@saim_setups",
+    city: "Lahore",
+    productName: "iPhone 17 Pro Max (Desert Titanium)",
+    comment: "Ordered from NEXORA and received delivery in Lahore within 24 hours! PTA status was pre-verified and authentic. The unboxing experience was unreal!",
+    rating: 5,
+    imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=800&auto=format&fit=crop",
+    verified: true
   },
   {
-    id: 'support',
-    icon: 'Sparkles',
-    title: 'Premium Support',
-    description: 'Dedicated concierge assistance before, during, and after every purchase.'
+    id: "setup-2",
+    name: "Zainab Ali",
+    handle: "@zainab_creatives",
+    city: "Karachi",
+    productName: "AirPods Max + MagSafe Duo",
+    comment: "The sound quality of AirPods Max is incredible! NEXORA gave me a great deal with instant WhatsApp support. 100% recommended for authentic Apple products in Pakistan.",
+    rating: 5,
+    imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop",
+    verified: true
   },
   {
-    id: 'secure',
-    icon: 'Lock',
-    title: 'Secure Payments',
-    description: 'Encrypted, seamless checkout with trusted international payment protection.'
+    id: "setup-3",
+    name: "Hamza Farooq",
+    handle: "@hamza_tech_pk",
+    city: "Islamabad",
+    productName: "Galaxy S26 Ultra 512GB",
+    comment: "Super smooth transaction. Received full official warranty documentation. The pixel arcade store theme is so cool and unique!",
+    rating: 5,
+    imageUrl: "https://images.unsplash.com/photo-1547082299-de196ea013d6?q=80&w=800&auto=format&fit=crop",
+    verified: true
   },
   {
-    id: 'delivery',
-    icon: 'Truck',
-    title: 'Fast Delivery',
-    description: 'Complimentary expedited white-glove shipping across Pakistan & worldwide.'
-  },
-  {
-    id: 'warranty',
-    icon: 'Award',
-    title: 'Official Warranty',
-    description: 'Full official AppleCare & brand coverage included on all eligible hardware.'
+    id: "setup-4",
+    name: "Bilal Raza",
+    handle: "@bilal_gadgets",
+    city: "Rawalpindi",
+    productName: "Apple Watch Ultra 2",
+    comment: "Best store for tech enthusiasts in Pakistan. Cash on Delivery was seamless. Will definitely buy my next phone from NEXORA!",
+    rating: 5,
+    imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=800&auto=format&fit=crop",
+    verified: true
   }
 ];
